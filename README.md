@@ -1,120 +1,93 @@
-# 🎮 MMO Social Platform
+<p align="center">
+  <img src="https://img.icons8.com/fluency/240/game-controller.png" width="120"/>
+</p>
 
-## 📌 Descrição do Projeto
-O **MMO Social Platform** é um sistema de gerenciamento de personagens de jogos MMO que funciona como uma rede social voltada para gamers.  
-Nele, usuários podem se cadastrar, criar personagens de seus jogos favoritos e interagir com outros personagens por meio de postagens, curtidas, comentários, seguidores e transmissões ao vivo de gameplays.
+<h1 align="center">🎮 MMO Social Platform</h1>
 
-O projeto foi desenvolvido com foco acadêmico e também como peça de portfólio, utilizando **Java com Spring Boot no backend**, incluindo **Spring Security**, e um frontend desenvolvido com tecnologia livre.
+<p align="center">
+  Transforme seus personagens em estrelas da comunidade gamer! 🌟
+</p>
 
----
-
-## 🧠 Objetivo
-Permitir que gamers:
-- Gerenciem múltiplos personagens de diferentes jogos
-- Interajam socialmente como seus personagens
-- Compartilhem experiências, postagens e gameplays
-- Acompanhem personagens do mesmo jogo ou de interesse
-
----
-
-## 👤 Fluxo do Usuário
-
-### 🔹 Tela Inicial
-- Opção de **Cadastro**
-- Opção de **Login**
-
-### 🔹 Cadastro
-- Formulário de criação de usuário
-- Após o cadastro, o usuário retorna para a tela de login
-
-### 🔹 Login
-- Autenticação do usuário
-- Redirecionamento para a **Tela Inicial do Gamer**
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17%2B-orange"/>
+  <img src="https://img.shields.io/badge/Frontend-Livre-blue"/>
+  <img src="https://img.shields.io/badge/Spring%20Boot-Backend-green"/>
+  <img src="https://img.shields.io/badge/WebSocket-Realtime-purple"/>
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow"/>
+</p>
 
 ---
 
-## 🎮 Funcionalidades – Tela Inicial do Gamer
-- Criar novos personagens
-- Associar personagens a jogos
-- Visualizar lista de personagens cadastrados
-- Acessar a tela de um personagem ao clicar em sua imagem
+## 🎯 Sobre o Projeto
+
+O **MMO Social Platform** é uma rede social para gamers que **querem viver seus personagens dentro e fora do jogo**.  
+Aqui, você pode criar múltiplos personagens, interagir com outros jogadores, compartilhar postagens e até transmitir gameplays ao vivo.
+
+O projeto combina **backend robusto com Spring Boot**, **segurança avançada com Spring Security** e **interatividade em tempo real via WebSocket**, sendo ideal para portfólio acadêmico ou profissional.
+
+> 💡 *"Não é só jogar. É mostrar quem você é no mundo virtual."*
 
 ---
 
-## 🧙 Funcionalidades – Tela Inicial do Personagem
-- Visualizar postagens de personagens seguidos
-- Curtir e comentar postagens
-- Criar novas postagens
-- Pesquisar personagens do mesmo jogo
-- Seguir outros personagens
-- Visualizar lives de personagens seguidos
+## 🛠️ Tecnologias
 
----
-
-## 👥 Perfil do Personagem
-- Informações básicas do personagem
-- Lista de todas as postagens realizadas
-- Acesso ao conteúdo público do personagem
-
----
-
-## 📺 Lives de Gameplay
-> Funcionalidade opcional de acordo com o avanço do projeto
-
-- Transmissão da tela do jogador utilizando **WebSocket**
-- Visualização das lives na tela inicial do personagem
-- Acesso à live ao clicar no personagem transmissor
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-### 🔙 Backend
+### 💻 Backend
 - Java 17+
-- Spring Boot
-- Spring Security
-- Spring Data JPA
-- Hibernate
+- Spring Boot, Spring Security
+- Spring Data JPA + Hibernate
 - Banco de dados relacional (MySQL / PostgreSQL / H2)
-- WebSocket (para lives)
+- WebSocket para transmissões ao vivo
 
-### 🔜 Frontend
-- Tecnologia livre (React, Angular, Vue, HTML/CSS/JS, etc.)
+### 🌐 Frontend
+- Livre (React, Angular, Vue, HTML/CSS/JS)
 
-### 🔧 Outros
+### 🛠️ Outros
 - Maven
 - Git e GitHub
 
 ---
 
-## 🔐 Segurança
-- Autenticação e autorização com **Spring Security**
-- Usuários autenticados para acesso às funcionalidades
-- Separação de permissões entre Gamer e Personagem
+## 📱 Funcionalidades Principais
+
+- 🔐 Cadastro e login de usuários
+- 👤 Criação e gerenciamento de personagens
+- 📝 Postagens, curtidas e comentários
+- 🙋 Seguir personagens e acompanhar atividades
+- 📺 Lives de gameplay via WebSocket
+- 🔍 Pesquisa de personagens por jogo
+- 🧪 Ambiente de teste com banco H2
 
 ---
 
-## 🎥 Vídeo de Apresentação
-Ao final do desenvolvimento, será gravado um vídeo demonstrando as funcionalidades do sistema.  
-O vídeo será disponibilizado em uma plataforma como **YouTube** ou **Vimeo**.
+## 📸 Demonstração
 
-📎 Link do vídeo: *(a ser adicionado)*
+<p align="center">
+  <img src="screenshots/login.png" width="200"/>
+  <img src="screenshots/home.png" width="200"/>
+  <img src="screenshots/profile.png" width="200"/>
+</p>
 
----
-
-## 👨‍💻 Desenvolvedores
-Projeto desenvolvido em dupla para fins acadêmicos.
-
-- AlaneOliveira
-- EduardaRFSousa
+> 💡 Crie uma pasta `screenshots/` para adicionar imagens do projeto.
 
 ---
 
-## 📌 Observações
-Este projeto pode ser utilizado como **portfólio profissional**, demonstrando conhecimentos em:
-- Backend com Spring Boot
-- Segurança de aplicações
-- Arquitetura REST
-- Integração frontend/backend
-- Conceitos de redes sociais
-- WebSocket e aplicações em tempo real
+## 🧩 Arquitetura do Sistema
+
+O projeto foi estruturado para **escala, manutenção e segurança**:
+
+- MVC + camadas de serviço e repositório
+- Observabilidade via logs e tratamento de erros
+- REST APIs para comunicação frontend-backend
+- WebSocket para interações em tempo real
+- Controle de permissões entre Gamer e Personagem
+
+---
+
+## 🚀 Como Rodar
+
+### Pré-requisitos
+
+- Java 17+
+- Maven
+- Banco de dados MySQL / PostgreSQL / H2
+- Frontend configurado (React / Angular / Vue / etc.)
