@@ -35,11 +35,11 @@ O projeto combina **backend robusto com Spring Boot**, **segurança avançada co
 - Java 17+
 - Spring Boot, Spring Security
 - Spring Data JPA + Hibernate
-- Banco de dados relacional (MySQL / PostgreSQL / H2)
+- Banco de dados relacional (PostgreSQL)
 - WebSocket para transmissões ao vivo
 
 ### 🌐 Frontend
-- Livre (React, Angular, Vue, HTML/CSS/JS)
+- Livre (HTML/CSS/JS/BOOTSTRAP)
 
 ### 🛠️ Outros
 - Maven
