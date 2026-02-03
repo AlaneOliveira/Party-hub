@@ -89,5 +89,4 @@ O projeto foi estruturado para **escala, manutenção e segurança**:
 
 - Java 17+
 - Maven
-- Banco de dados MySQL / PostgreSQL / H2
-- Frontend configurado (React / Angular / Vue / etc.)
+- Banco de dados MySQL / PostgreSQL
