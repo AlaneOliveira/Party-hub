@@ -1,4 +1,4 @@
-package com.mmo.repositories;
+package com.mmo.party_hub.model.repositories;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

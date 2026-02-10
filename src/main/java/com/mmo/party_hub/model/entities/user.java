@@ -1,4 +1,4 @@
-package com.mmo.entities;
+package com.mmo.party_hub.model.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity; // impor
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import jakarta.persistence.Id; // Importação necessária para o @Id funcionar
 
 @Entity // anotação para indicar que esta classe é uma entidade JPA, ou seja, mapeada para uma tabela no banco de dados, chamada  "User" para o nosso usuario
 public class user { // atributos comuns a todos os tipos de usuário
-   
+
     @Id // mostra que este atributo é a chave primária da tabela
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Isso gera o AUTO_INCREMENT
     private Integer id;

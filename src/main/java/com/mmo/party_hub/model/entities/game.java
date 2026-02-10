@@ -1,4 +1,4 @@
-package com.mmo.entities;
+package com.mmo.party_hub.model.entities;
 
 public class game {
     private int id;
