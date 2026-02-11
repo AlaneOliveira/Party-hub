@@ -15,6 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class userController {
      @GetMapping
     public ResponseEntity<?> getUser() {
-        return this.userS.getUser();
+        return this.user.getUser();
     }
 }
