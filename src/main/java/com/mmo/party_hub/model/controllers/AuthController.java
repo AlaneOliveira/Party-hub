@@ -2,18 +2,19 @@ package com.mmo.party_hub.model.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mmo.party_hub.dto.CadastroDTO;
 import com.mmo.party_hub.dto.LoginDTO;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.services.AuthService;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
+// rota padrao
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
@@ -23,10 +24,15 @@ public class AuthController {
     public ResponseEntity<?> postNewGamer(@RequestBody Gamer gamer) {
         return this.authS.newGamer(gamer); 
     }
-
+    // rota login
     @PostMapping("/login")
     public ResponseEntity<?> postMethodName(@RequestBody LoginDTO login) {
         return this.authS.login(login);
     }
+    // rota cadastro
+    @PostMapping("/cadastro")
+    public ResponseEntity<?> postMethodName(@RequestBody CadastroDTO cadastro){
+        return this.authS.cadastro(cadastro);
+  }
 
 }

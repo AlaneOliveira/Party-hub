@@ -16,13 +16,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .cors(Customizer.withDefaults()) // <--- Habilita o CORS aqui
-            .authorizeHttpRequests(auth -> auth
-                // TODO: Ajustar as urls de acordo com as necessidades do projeto
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable()) 
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .cors(Customizer.withDefaults()) 
+        .authorizeHttpRequests(auth -> auth
+            // LIBERA AS ROTAS DE LOGIN E CADASTRO
+            .requestMatchers("/auth/**").permitAll() 
+            // TODO: Ajustar as urls de acordo com as necessidades do projeto
                 /*
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/user/**").hasRole("USER")
@@ -30,12 +32,14 @@ public class SecurityConfig {
                 .requestMatchers("/bet/**").hasRole("USER")
                 .requestMatchers("/public/**").permitAll()
                  */
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+            // O RESTO EXIGE TOKEN (COMO O GETUSER)
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
 
     @Bean
     public PasswordEncoder encoder() {
