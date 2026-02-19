@@ -1,5 +1,5 @@
 package com.mmo.party_hub.dto;
-public class CadastroDTO { // dto para o cadastro do usuario
+public class RegisterDTO { // dto para o cadastro do usuario
     private String name;
     private String email;
     private String password;

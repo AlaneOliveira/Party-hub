@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mmo.party_hub.dto.CadastroDTO;
+import com.mmo.party_hub.dto.RegisterDTO;
 import com.mmo.party_hub.dto.LoginDTO;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.services.AuthService;
@@ -30,9 +30,9 @@ public class AuthController {
         return this.authS.login(login);
     }
     // rota cadastro
-    @PostMapping("/cadastro")
-    public ResponseEntity<?> postMethodName(@RequestBody CadastroDTO cadastro){
-        return this.authS.cadastro(cadastro);
+    @PostMapping("/register")
+    public ResponseEntity<?> postMethodName(@RequestBody RegisterDTO register){
+        return this.authS.register(register);
   }
 
 }

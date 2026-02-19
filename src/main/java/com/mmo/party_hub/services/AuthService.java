@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.mmo.party_hub.dto.CadastroDTO;
 import com.mmo.party_hub.dto.LoginDTO;
+import com.mmo.party_hub.dto.RegisterDTO;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.model.repositories.GamerRepository;
 import com.mmo.party_hub.security.JwtUtils;
@@ -36,7 +36,7 @@ public class AuthService {
     }
 
     // 1. PRIMEIRO PASSO: O usuário se cadastra
-    public ResponseEntity<?> cadastro(CadastroDTO dados) {
+    public ResponseEntity<?> register(RegisterDTO dados) {
         // Verifica se o email já existe no banco
         if (gamerRepo.findByEmail(dados.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Erro: Este e-mail já está cadastrado!");
@@ -69,7 +69,7 @@ public class AuthService {
             // Verifica se a senha enviada no login bate com a senha encriptada do banco
             if (this.encoder.matches(login.getPassword(), gamer.getPassword())) {
                 // Se tudo estiver certo, gera o Token JWT
-                String token = this.jwtUtils.generateToken(gamer.getEmail(), "GAMER");
+                String token = this.jwtUtils.generateToken(String.valueOf(gamer.getId()), "GAMER");
                 return ResponseEntity.ok(token);
             }
         }

@@ -34,12 +34,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();
                 String role = (String) claims.get("role");
 
+                System.out.println("DEBUG - Usuário do Token: " + username);
+                System.out.println("DEBUG - Role extraída: " + role);
+                
                 if (username != null) {
-                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(username, null, authorities);
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                }
+                    // Se o token tem "GAMER", ele entrega "GAMER"
+                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role)); 
+    
+                UsernamePasswordAuthenticationToken auth =
+                new UsernamePasswordAuthenticationToken(username, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 e.printStackTrace();

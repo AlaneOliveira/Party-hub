@@ -1,29 +1,42 @@
 package com.mmo.party_hub.model.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-@Table(name = "comment")
-@Getter @Setter
-
 public class Comment {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int id;
+    private long date;
+    
+    @Lob
     private String content;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
-
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    private Gamer gamer;
+    
+    @ManyToOne
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "character_id")
-    private GameCharacter character;
+    // Getters e Setters limpos
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public long getDate() { return date; }
+    public void setDate(long date) { this.date = date; }
+    
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+
+    public Gamer getGamer() { return gamer; }
+    public void setGamer(Gamer gamer) { this.gamer = gamer; }
+    
+    public Post getPost() { return post; }
+    public void setPost(Post post) { this.post = post; }
 }

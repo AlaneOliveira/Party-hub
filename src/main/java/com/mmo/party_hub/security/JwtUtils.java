@@ -1,23 +1,22 @@
 package com.mmo.party_hub.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtils {
 	private static final String SECRET_KEY = "cc158e2a-0747-4f5a-84f5-1bbc20c4c048";
-
-	public String generateToken(String username, String role) {
+public String generateToken(String username, String role) {
+	
 	    Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
 	    return Jwts.builder()
@@ -37,7 +36,7 @@ public class JwtUtils {
     		    .getBody();
     }
 	
-	public String getAuthorizedId() {
-		return SecurityContextHolder.getContext().getAuthentication().getName();
-	}
+public String getAuthorizedId() {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
+}
 }

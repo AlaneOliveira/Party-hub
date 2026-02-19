@@ -16,30 +16,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(csrf -> csrf.disable()) 
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .cors(Customizer.withDefaults()) 
-        .authorizeHttpRequests(auth -> auth
-            // LIBERA AS ROTAS DE LOGIN E CADASTRO
-            .requestMatchers("/auth/**").permitAll() 
-            // TODO: Ajustar as urls de acordo com as necessidades do projeto
-                /*
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .cors(Customizer.withDefaults()) 
+            .authorizeHttpRequests(auth -> auth
+                // Mantendo a lógica de permissões do seu modelo
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/user/**").hasRole("USER")
-                .requestMatchers("/question/**").hasRole("USER")
-                .requestMatchers("/bet/**").hasRole("USER")
+                .requestMatchers("/gamer/**").hasAuthority("GAMER") // Troque hasRole por hasAuthority
+                .requestMatchers("/comment/**").hasAuthority("GAMER") // No lugar de question
+                .requestMatchers("/bet/**").hasAuthority("GAMER")
                 .requestMatchers("/public/**").permitAll()
-                 */
+                
+                .anyRequest().authenticated()
+            )
+            // Lógica do modelo: instanciando manualmente com 'new'
+            .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-            // O RESTO EXIGE TOKEN (COMO O GETUSER)
-            .anyRequest().authenticated()
-        )
-        .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-    return http.build();
-}
+        return http.build();
+    }
 
     @Bean
     public PasswordEncoder encoder() {

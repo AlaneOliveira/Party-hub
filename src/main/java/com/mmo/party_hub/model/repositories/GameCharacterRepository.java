@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface GameCharacterRepository extends JpaRepository<GameCharacter, Long> {
-    // Para a busca por jogo vinda da API
     List<GameCharacter> findByGameTitle(String gameTitle);
     
     // Para listar os personagens de um Gamer específico
