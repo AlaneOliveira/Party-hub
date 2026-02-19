@@ -11,9 +11,11 @@ import com.mmo.party_hub.dto.NewPostDTO;
 import com.mmo.party_hub.dto.PostDTO;
 import com.mmo.party_hub.dto.PublicPostDTO;
 import com.mmo.party_hub.model.entities.Bet;
+import com.mmo.party_hub.model.entities.GameCharacter;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.model.entities.Post;
 import com.mmo.party_hub.model.repositories.BetRepository;
+import com.mmo.party_hub.model.repositories.GameCharacterRepository;
 import com.mmo.party_hub.model.repositories.GamerRepository;
 import com.mmo.party_hub.model.repositories.PostRepository;
 import com.mmo.party_hub.security.JwtUtils;
@@ -29,42 +31,41 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
+    @Autowired // Mudei para gamerRepo para bater com o resto do código
     private GamerRepository gamerRepo;
 
     @Autowired
     private BetRepository betRepo;
 
-    @Transactional
-    public ResponseEntity<?> save(NewPostDTO dto){
+    @Autowired // ADICIONE ISSO QUE ESTAVA FALTANDO!
+    private GameCharacterRepository characterRepository;
 
-        if(dto.getBetValue() < 10 || dto.getContent().isEmpty()){
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> save(NewPostDTO dto) {
+        try {
+            // 1. Agora usando a variável correta e injetada
+            GameCharacter character = characterRepository.findById(dto.getCharacterId())
+                .orElseThrow(() -> new RuntimeException("Personagem não encontrado"));
+
+            Post post = new Post();
+            post.setContent(dto.getContent());
+            post.setDescription(dto.getDescription());
+            post.setCategory(dto.getCategory());
+            post.setCharacter(character); 
+            
+            // 2. Usando o nome correto: gamerRepo
+            String idDoToken = jwtUtils.getAuthorizedId();
+            Gamer author = gamerRepo.findById(Long.valueOf(idDoToken))
+                .orElseThrow(() -> new RuntimeException("Autor não encontrado"));
+            
+            post.setAuthor(author);
+
+            postRepository.save(post);
+            return ResponseEntity.ok("Post criado!");
+        } catch (Exception e) {
+            // Se cair aqui, o Postman recebe 400 com a mensagem do erro
+            return ResponseEntity.status(400).body("Erro: " + e.getMessage());
         }
-
-        // 1. Converte o ID do Token para Long (Tipo do seu Repository)
-        Long idGamer = Long.valueOf(jwtUtils.getAuthorizedId());
-        
-        // 2. Busca o Gamer uma ÚNICA vez
-        Gamer gamer = gamerRepo.findById(idGamer)
-                .orElseThrow(() -> new RuntimeException("Gamer não encontrado"));
-
-        Post post = new Post();
-        post.setContent(dto.getContent());
-        post.setAuthor(gamer);
-        post = postRepository.save(post);
-
-        Bet bet = new Bet();
-        bet.setAnswer(dto.isBetAnswer());
-        bet.setValue(dto.getBetValue() - (dto.getBetValue() / 10));
-        bet.setPost(post); 
-        bet.setGamer(gamer);
-
-        betRepo.save(bet);
-
-        return ResponseEntity.ok().build();
     }
-
     public ResponseEntity<?> getAuthorizedPosts(){
         // 3. Converte para Long aqui também para evitar o erro de Incompatible Types
         Long idGamer = Long.valueOf(jwtUtils.getAuthorizedId());

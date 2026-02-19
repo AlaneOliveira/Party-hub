@@ -1,5 +1,6 @@
 package com.mmo.party_hub.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,6 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired // Injeção automática pelo Spring
+    private JwtAuthenticationFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,12 +30,13 @@ public class SecurityConfig {
                 .requestMatchers("/gamer/**").hasAuthority("GAMER") // Troque hasRole por hasAuthority
                 .requestMatchers("/comment/**").hasAuthority("GAMER") // No lugar de question
                 .requestMatchers("/bet/**").hasAuthority("GAMER")
+                .requestMatchers("/post/**").hasAuthority("GAMER")
                 .requestMatchers("/public/**").permitAll()
                 
                 .anyRequest().authenticated()
             )
-            // Lógica do modelo: instanciando manualmente com 'new'
-            .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+           
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

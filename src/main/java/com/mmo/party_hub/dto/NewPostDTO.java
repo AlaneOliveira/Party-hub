@@ -9,6 +9,14 @@ public class NewPostDTO {
     private double betValue;
     private boolean betAnswer;
 
+    private Long characterId;
+
+    // E ADICIONE OS GETTERS E SETTERS PARA characterId ABAIXO:
+    public Long getCharacterId() { return characterId; }
+    public void setCharacterId(Long characterId) { this.characterId = characterId; }
+
+    public NewPostDTO() { }
+
     public String getContent() {
         return content;
     }
