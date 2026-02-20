@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mmo.party_hub.dto.NewPostDTO;
-import com.mmo.party_hub.dto.PostDTO;
-import com.mmo.party_hub.dto.PublicPostDTO;
-import com.mmo.party_hub.model.entities.Bet;
+import com.mmo.party_hub.dto.PostDTO; 
 import com.mmo.party_hub.model.entities.GameCharacter;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.model.entities.Post;
@@ -19,9 +17,7 @@ import com.mmo.party_hub.model.repositories.GameCharacterRepository;
 import com.mmo.party_hub.model.repositories.GamerRepository;
 import com.mmo.party_hub.model.repositories.PostRepository;
 import com.mmo.party_hub.security.JwtUtils;
-
-import jakarta.transaction.Transactional;
-
+ 
 @Service
 public class PostService {
 
@@ -85,8 +81,5 @@ public class PostService {
 
         return ResponseEntity.ok(dtos);
     }
-    public ResponseEntity<?> getPublicAvailablePosts() {
-    List<PublicPostDTO> posts = postRepository.findAvailable().orElseThrow();
-    return ResponseEntity.ok(posts);
-}
+    
 }    
