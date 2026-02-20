@@ -17,7 +17,8 @@ import com.mmo.party_hub.model.repositories.GameCharacterRepository;
 import com.mmo.party_hub.model.repositories.GamerRepository;
 import com.mmo.party_hub.model.repositories.PostRepository;
 import com.mmo.party_hub.security.JwtUtils;
- 
+import com.mmo.party_hub.model.repositories.PostLikeRepository;  
+
 @Service
 public class PostService {
 
@@ -35,6 +36,9 @@ public class PostService {
 
     @Autowired // ADICIONE ISSO QUE ESTAVA FALTANDO!
     private GameCharacterRepository characterRepository;
+
+    @Autowired
+    private PostLikeRepository postLikeRepository;
 
     public ResponseEntity<?> save(NewPostDTO dto) {
         try {
@@ -62,13 +66,10 @@ public class PostService {
             return ResponseEntity.status(400).body("Erro: " + e.getMessage());
         }
     }
+
     public ResponseEntity<?> getAuthorizedPosts(){
         // 3. Converte para Long aqui também para evitar o erro de Incompatible Types
-        Long idGamer = Long.valueOf(jwtUtils.getAuthorizedId());
-        Gamer gamer = gamerRepo.findById(idGamer).orElseThrow();
-        
-        String gamerEmail = gamer.getEmail(); 
-
+        Long idGamer = Long.valueOf(jwtUtils.getAuthorizedId()); 
         List<Post> posts = this.postRepository.findByAuthorId(idGamer)
                             .orElseThrow(() -> new RuntimeException("Nenhum post encontrado"));
 
@@ -82,4 +83,24 @@ public class PostService {
         return ResponseEntity.ok(dtos);
     }
     
+    public ResponseEntity<?> getGlobalFeed() {
+        List<Post> posts = this.postRepository.findAllByOrderByDateDesc();
+
+        List<PostDTO> dtos = posts.stream().map(p -> {
+            // Criando o DTO com os dados da entidade
+            PostDTO dto = new PostDTO(p.getId(), p.getContent(), p.getDescription(), p.getCategory(), p.getDate());
+            
+            // Buscando o valor total de apostas (Pot) no BetRepository
+            Double totalPot = betRepo.sumBetValue(p.getId());
+            dto.setPot(totalPot != null ? totalPot : 0.0);
+            
+            // Buscando a contagem de curtidas no PostLikeRepository
+            dto.setLikes((int) postLikeRepository.countByCommentId(p.getId()));
+            
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
 }    

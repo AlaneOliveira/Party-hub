@@ -1,43 +1,50 @@
-// Recupera os dados persistidos no login e na seleção do personagem
 const selectedCharId = sessionStorage.getItem('selectedCharId');
-const token = sessionStorage.getItem('token');
 
 window.onload = function() {
-    // Redireciona se tentar acessar a página sem selecionar um personagem
-    if (!selectedCharId || !token) {
+    const token = sessionStorage.getItem('token');
+     
+    if (!token || !selectedCharId) {
         window.location.href = 'gamerhome.html';
         return;
     }
-    
-    // Opcional: carregar dados básicos do personagem no topo da página
-    carregarDadosPersonagem();
-    carregarFeed();
+ 
+    document.getElementById('charNameDisplay').innerText = `Personagem ID: ${selectedCharId}`;
+
+    loadFeed();
 };
-
-// --- FUNÇÃO: CRIAR POST ---
+ 
 async function enviarPost() {
-    const textarea = document.getElementById('postContent');
-    const content = textarea.value.trim();
+    const content = document.getElementById('postContent').value;
+    const token = sessionStorage.getItem('token');
 
-    if (!content) {
-        alert("O post não pode estar vazio!");
+    if (!content.trim()) {
+        alert("Escreva algo antes de postar!");
         return;
     }
+ 
+    const payload = {
+        content: content,
+        description: "Postagem de Personagem", 
+        category: "Geral",
+        characterId: parseInt(selectedCharId), 
+        betValue: 0.0,
+        betAnswer: false
+    };
 
     try {
-        const response = await fetch(`/posts/create/${selectedCharId}`, {
+        const response = await fetch(`${BASE_URL}/post`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ content: content })
+            body: JSON.stringify(payload)
         });
 
         if (response.ok) {
-            textarea.value = ''; // Limpa o campo
-            alert("Postagem realizada com sucesso!");
-            carregarFeed(); // Atualiza a lista de posts automaticamente
+            alert("Postado com sucesso!");
+            document.getElementById('postContent').value = '';
+            loadFeed(); 
         } else {
             const erro = await response.text();
             alert("Erro ao postar: " + erro);
@@ -46,57 +53,55 @@ async function enviarPost() {
         console.error("Erro na requisição:", error);
     }
 }
-
-// --- FUNÇÃO: CARREGAR FEED ---
-async function carregarFeed() {
+ 
+async function loadFeed() {
+    const token = sessionStorage.getItem('token');
     const feedContainer = document.getElementById('feedContainer');
-    
-    try {
-        const response = await fetch(`/posts/feed/${selectedCharId}`, {
+
+    try { 
+        const response = await fetch(`${BASE_URL}/post`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (response.ok) {
             const posts = await response.json();
-            renderizarFeed(posts);
+            renderFeed(posts);
+        } else {
+            feedContainer.innerHTML = '<p class="text-danger">Erro ao carregar o feed.</p>';
         }
     } catch (error) {
-        console.error("Erro ao carregar feed:", error);
+        console.error("Erro no feed:", error);
     }
 }
-
-function renderizarFeed(posts) {
-    const feedContainer = document.getElementById('feedContainer');
+ 
+function renderFeed(posts) {
+    const container = document.getElementById('feedContainer');
     
     if (posts.length === 0) {
-        feedContainer.innerHTML = '<div class="alert alert-info">Ninguém postou nada ainda. Siga novos heróis!</div>';
+        container.innerHTML = '<p class="text-muted">Nenhuma postagem encontrada.</p>';
         return;
     }
 
-    feedContainer.innerHTML = posts.map(post => `
+    container.innerHTML = posts.map(post => `
         <div class="card bg-secondary text-white mb-3 shadow-sm border-0">
             <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                    <img src="/photos/show/${post.character.id}" 
-                         class="rounded-circle me-2" 
-                         style="width: 40px; height: 40px; object-fit: cover;"
-                         onerror="this.src='/images/default-avatar.jpg'">
-                    <h6 class="card-title mb-0">@${post.character.name}</h6>
-                </div>
-                <p class="card-text">${post.content}</p>
+                <p class="mb-1 text-light opacity-75" style="font-size: 0.85rem;">
+                    <i class="bi bi-clock"></i> ${new Date(post.date).toLocaleString()}
+                </p>
+                <p class="card-text fs-5">${post.content}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-light opacity-50">Postado em: ${new Date(post.createdAt).toLocaleString()}</small>
                     <div>
-                        <button class="btn btn-sm btn-outline-warning me-2" onclick="abrirModalComentario(${post.id})">
-                            <i class="bi bi-chat-dots"></i> Comentar
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="curtirPost(${post.id})">
-                            <i class="bi bi-heart"></i> Curtir
-                        </button>
+                        <span class="badge bg-dark me-2">❤️ ${post.likes || 0}</span>
+                        <span class="badge bg-dark">💰 Pot: ${post.pot.toFixed(2)}</span>
                     </div>
+                    <button class="btn btn-sm btn-outline-light">Comentar</button>
                 </div>
             </div>
         </div>
     `).join('');
 }
-
+ 
+async function buscarMesmoJogo() {
+    const playersList = document.getElementById('playersList');
+    playersList.innerHTML = '<p class="text-warning">Buscando jogadores do seu jogo...</p>';
+}
