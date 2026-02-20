@@ -62,7 +62,7 @@ public class GamerService {
             p.setContent(file.getBytes());
             p.setExtension(file.getContentType().split("/")[1]);
             p.setLength((int) file.getSize());
-            p.setGamer(gamer);
+            p.setG(gamer);
 
             photoRepository.save(p);
             return ResponseEntity.ok().build();
@@ -73,15 +73,12 @@ public class GamerService {
     }
 
     public ResponseEntity<?> getPerfil() {
-        // Se a foto estiver ligada ao ID do Gamer, mude o método do repository também
         Long id = Long.valueOf(this.jwtUtils.getAuthorizedId());
-        
-        // Ajuste aqui para buscar pelo ID do Gamer
-        Optional<Photo> photoOpt = this.photoRepository.findByGamerId(id);
+        Optional<Photo> photoOpt = this.photoRepository.findByGId(id);
 
         if (photoOpt.isPresent()) {
             Photo p = photoOpt.get();
-            p.setGamer(null); 
+            p.setG(null);
             return ResponseEntity.ok(p);
         }
 

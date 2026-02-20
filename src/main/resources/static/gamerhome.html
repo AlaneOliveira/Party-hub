@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - PartyHub</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/index.css"/>
+</head>
+<body class="bg-dark text-white">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">PartyHub</a>
+            <div class="d-flex align-items-center">
+                <span class="me-3" id="welcomeText">Carregando...</span>
+                <button onclick="logout()" class="btn btn-outline-danger btn-sm">Sair</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container m-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Meus Personagens</h2>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#charModal">
+                Novo Personagem
+            </button>
+        </div>
+
+        <div class="row" id="charactersList">
+            <div class="text-center">
+                <p>Você ainda não possui personagens cadastrados.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="charModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Criar Novo Personagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="charForm">
+                <div class="mb-3">
+                    <label class="form-label">Nome do Personagem</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3"> 
+                    <div class="mb-3">
+                        <label class="form-label">Escolha o Jogo</label>
+                        <select class="form-select" id="gameTitle" required>
+                            <option value="" selected disabled>Selecione um MMO...</option>
+                            <option value="Overwatch 2">Overwatch 2</option>
+                            <option value="League of Legends">League of Legends</option>
+                            <option value="Counter-Strike 2">Counter-Strike 2</option>
+                            <option value="Genshin Impact">Genshin Impact</option>
+                            <option value="Valorant">Valorant</option>
+                            <option value="Diablo IV">Diablo IV</option>
+                            <option value="World of Warcraft">World of Warcraft</option>
+                            <option value="Lost Ark">Lost Ark</option>
+                            <option value="Destiny 2">Destiny 2</option>
+                            <option value="Fortnite">Fortnite</option>
+                            </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Classe (opcional)</label>
+                    <input type="text" class="form-control" id="clazz" placeholder="Ex: Guerreiro, Mago">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Foto do Personagem (Opcional)</label>
+                    <input type="file" class="form-control" id="photoFile" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-success w-100">Salvar Personagem</button>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/gamerhome.js"></script>
+</body>
+</html>

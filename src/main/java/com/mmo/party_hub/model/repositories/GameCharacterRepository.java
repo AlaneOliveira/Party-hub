@@ -9,4 +9,5 @@ public interface GameCharacterRepository extends JpaRepository<GameCharacter, Lo
     
     // Para listar os personagens de um Gamer específico
     List<GameCharacter> findByGamerId(Long gamerId);
+
 }

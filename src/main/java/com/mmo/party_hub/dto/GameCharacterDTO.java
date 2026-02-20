@@ -10,7 +10,7 @@ import com.mmo.party_hub.model.entities.GameCharacter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GamerCharacterDTO {
+public class GameCharacterDTO {
 
     private Long id;
     private String name;
@@ -20,8 +20,7 @@ public class GamerCharacterDTO {
     private String imageUrl;
     private boolean hasPhoto;
 
-    // Construtor para converter Entidade em DTO
-    public GamerCharacterDTO(GameCharacter character) {
+    public GameCharacterDTO(GameCharacter character) {
         this.id = character.getId();
         this.name = character.getName();
         this.clazz = character.getClazz();

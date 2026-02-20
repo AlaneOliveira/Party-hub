@@ -7,14 +7,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
+import lombok.Getter;
+import lombok.Setter;
 
-@Entity // @ diz que a classe photo tera o mesmo nome na tabela do banco
+@Getter @Setter
+@Entity
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
+
     @Lob
     private byte[] content;
+
     @Column(length=4)
     private String extension;
     private int length;
@@ -22,44 +27,6 @@ public class Photo {
     @OneToOne
     private Gamer g;
 
-    // chave primaria do banco
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public Gamer getGamer() {
-        return g;
-    }
-
-    public void setGamer(Gamer g) {
-        this.g = g;
-    }
+    @OneToOne
+    private GameCharacter character;
 }
