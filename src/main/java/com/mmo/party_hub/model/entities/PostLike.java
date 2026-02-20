@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "like")
+@Table(name = "post_like")
 public class PostLike {
 
     @Id
