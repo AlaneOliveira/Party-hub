@@ -28,15 +28,15 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth 
                 .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
              
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/public/**").permitAll() 
+                .requestMatchers("/auth/**").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/photos/show/**").permitAll() 
                 
                 .requestMatchers("/gamer/**").hasAuthority("GAMER")
                 .requestMatchers("/comment/**").hasAuthority("GAMER")
-                .requestMatchers("/bet/**").hasAuthority("GAMER")
                 .requestMatchers("/post/**").hasAuthority("GAMER")
-                    
+                .requestMatchers("/like/**").hasAuthority("GAMER")
+                .requestMatchers("/public/**").permitAll()
+                
                 .anyRequest().authenticated()
             )
            

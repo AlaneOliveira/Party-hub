@@ -61,7 +61,5 @@ public class Bet {
         this.post = post;
     }
 
-
-
 }
 

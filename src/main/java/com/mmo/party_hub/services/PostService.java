@@ -8,16 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mmo.party_hub.dto.NewPostDTO;
-import com.mmo.party_hub.dto.PostDTO; 
+import com.mmo.party_hub.dto.PostDTO;
 import com.mmo.party_hub.model.entities.GameCharacter;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.model.entities.Post;
-import com.mmo.party_hub.model.repositories.BetRepository;
 import com.mmo.party_hub.model.repositories.GameCharacterRepository;
 import com.mmo.party_hub.model.repositories.GamerRepository;
+import com.mmo.party_hub.model.repositories.PostLikeRepository;
 import com.mmo.party_hub.model.repositories.PostRepository;
 import com.mmo.party_hub.security.JwtUtils;
-import com.mmo.party_hub.model.repositories.PostLikeRepository;  
 
 @Service
 public class PostService {
@@ -32,9 +31,6 @@ public class PostService {
     private GamerRepository gamerRepo;
 
     @Autowired
-    private BetRepository betRepo;
-
-    @Autowired // ADICIONE ISSO QUE ESTAVA FALTANDO!
     private GameCharacterRepository characterRepository;
 
     @Autowired
@@ -58,7 +54,6 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("Autor não encontrado"));
             
             post.setAuthor(author);
-
             postRepository.save(post);
             return ResponseEntity.ok("Post criado!");
         } catch (Exception e) {
@@ -67,40 +62,33 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<?> getAuthorizedPosts(){
+    public ResponseEntity<?> getAuthorizedPosts() {
         // 3. Converte para Long aqui também para evitar o erro de Incompatible Types
-        Long idGamer = Long.valueOf(jwtUtils.getAuthorizedId()); 
+        Long idGamer = Long.valueOf(jwtUtils.getAuthorizedId());
         List<Post> posts = this.postRepository.findByAuthorId(idGamer)
-                            .orElseThrow(() -> new RuntimeException("Nenhum post encontrado"));
+                .orElseThrow(() -> new RuntimeException("Nenhum post encontrado"));
 
         List<PostDTO> dtos = posts.stream().map(p -> {
-            PostDTO dto = new PostDTO(p.getId(), p.getContent(), "Desc", "Cat", p.getDate());
-            Double totalPot = betRepo.sumBetValue(p.getId());
-            dto.setPot(totalPot != null ? totalPot : 0.0);
+            PostDTO dto = new PostDTO(p.getId(), p.getContent(), p.getDescription(), p.getCategory(), p.getDate());
+            // Buscando a contagem de curtidas no PostLikeRepository
+            dto.setLikes((int) postLikeRepository.countByCommentId(p.getId()));
             return dto;
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
-    
+
     public ResponseEntity<?> getGlobalFeed() {
         List<Post> posts = this.postRepository.findAllByOrderByDateDesc();
 
         List<PostDTO> dtos = posts.stream().map(p -> {
             // Criando o DTO com os dados da entidade
             PostDTO dto = new PostDTO(p.getId(), p.getContent(), p.getDescription(), p.getCategory(), p.getDate());
-            
-            // Buscando o valor total de apostas (Pot) no BetRepository
-            Double totalPot = betRepo.sumBetValue(p.getId());
-            dto.setPot(totalPot != null ? totalPot : 0.0);
-            
             // Buscando a contagem de curtidas no PostLikeRepository
             dto.setLikes((int) postLikeRepository.countByCommentId(p.getId()));
-            
             return dto;
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
-
-}    
+}

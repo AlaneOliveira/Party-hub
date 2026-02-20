@@ -71,9 +71,11 @@ public class GamerController {
         return ResponseEntity.ok(dtos);
     }
 
-    @PostMapping("/character/photo/{id}")
-    public ResponseEntity<?> uploadCharPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        return this.characterService.uploadPhoto(id, file);
-    }
+    @PatchMapping("/character/{id}/photo") // nova rota para upload de foto do personagem, usando o ID do personagem na URL
+    public ResponseEntity<?> uploadCharacterPhoto(
+    @PathVariable Long id,
+    @RequestParam("file") MultipartFile file) {
+    return characterService.uploadPhoto(id, file);
+}
 
 }

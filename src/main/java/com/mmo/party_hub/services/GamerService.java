@@ -34,7 +34,7 @@ public class GamerService {
         
         // 2. Buscamos pelo ID numérico
         Gamer u = gamerRepo.findById(id)
-                             .orElseThrow(() -> new RuntimeException("Gamer não encontrado"));
+                             .orElseThrow(() -> new RuntimeException("Gamer not found"));
         u.setPassword(null); 
         return ResponseEntity.ok(u);
     }
@@ -42,33 +42,33 @@ public class GamerService {
     public ResponseEntity<?> updatePassword(NewPasswordDTO passDto) {
         Long id = Long.valueOf(jwtUtils.getAuthorizedId());
         Gamer u = gamerRepo.findById(id)
-                             .orElseThrow(() -> new RuntimeException("Gamer não encontrado"));
+                             .orElseThrow(() -> new RuntimeException("Gamer not found"));
 
         if (encoder.matches(passDto.getOldPassword(), u.getPassword())) {
             u.setPassword(encoder.encode(passDto.getNewPassword()));
             gamerRepo.save(u);
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().body("Senha antiga incorreta");
+        return ResponseEntity.badRequest().body("Incorrect old password.");
     }
 
     public ResponseEntity<?> uploadPhoto(MultipartFile file) {
         try {
             Long id = Long.valueOf(jwtUtils.getAuthorizedId());
             Gamer gamer = this.gamerRepo.findById(id)
-                                 .orElseThrow(() -> new RuntimeException("Gamer não encontrado"));
+                                 .orElseThrow(() -> new RuntimeException("Gamer not found"));
 
             Photo p = new Photo();
             p.setContent(file.getBytes());
             p.setExtension(file.getContentType().split("/")[1]);
             p.setLength((int) file.getSize());
-            p.setG(gamer);
+            p.setGamer(gamer);
 
             photoRepository.save(p);
             return ResponseEntity.ok().build();
             
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Erro ao processar a imagem");
+            return ResponseEntity.internalServerError().body("Error processing the photo.: " + e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class GamerService {
 
         if (photoOpt.isPresent()) {
             Photo p = photoOpt.get();
-            p.setG(null);
+            p.setGamer(null);
             return ResponseEntity.ok(p);
         }
 

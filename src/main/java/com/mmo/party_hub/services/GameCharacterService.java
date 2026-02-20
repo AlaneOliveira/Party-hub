@@ -1,5 +1,7 @@
 package com.mmo.party_hub.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ import com.mmo.party_hub.model.repositories.GameCharacterRepository;
 import com.mmo.party_hub.model.repositories.GamerRepository;
 import com.mmo.party_hub.model.repositories.PhotoRepository;
 import com.mmo.party_hub.security.JwtUtils;
-import java.util.List;
 
 @Service
 public class GameCharacterService {
@@ -32,9 +33,12 @@ public class GameCharacterService {
 
     public ResponseEntity<?> newGameCharacter(GameCharacterDTO dto) {
         try {
+            // 1. Pegamos o ID do token como String e convertemos para Long
             Long idNumerico = Long.valueOf(jwtUtils.getAuthorizedId()); 
+
+            // 2. Buscamos usando o número
             Gamer gamer = gamerRepository.findById(idNumerico)
-                .orElseThrow(() -> new RuntimeException("Gamer não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Gamer not found"));
 
             GameCharacter character = new GameCharacter();
             character.setName(dto.getName());
@@ -51,29 +55,28 @@ public class GameCharacterService {
         }
     }
     
-    
     public ResponseEntity<?> uploadPhoto(Long charId, MultipartFile file) {
-        try {
-            GameCharacter character = characterRepository.findById(charId)
-                    .orElseThrow(() -> new RuntimeException("Personagem não encontrado"));
+    try {
+        GameCharacter character = characterRepository.findById(charId)
+                .orElseThrow(() -> new RuntimeException("Game character not found"));
 
-            Photo p = new Photo();
-            p.setContent(file.getBytes());
-            p.setExtension(file.getContentType().split("/")[1]);
-            p.setLength((int) file.getSize());
-            p.setCharacter(character); // Vincula ao personagem
+        // Busca foto existente ou cria nova
+        Photo p = photoRepository.findByCharacterId(charId).orElse(new Photo());
+        p.setContent(file.getBytes());
+        p.setExtension(file.getContentType().split("/")[1]);
+        p.setLength((int) file.getSize());
+        p.setCharacter(character);
 
-            photoRepository.save(p);
-            
-            // Atualiza a URL para o front saber que agora tem foto
-            character.setImageUrl("/photos/show/" + charId); 
-            characterRepository.save(character);
+        photoRepository.save(p);
+        
+        character.setImageUrl("/photos/show/" + charId); 
+        characterRepository.save(character);
 
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao processar imagem");
-        }
+        return ResponseEntity.ok().build();
+    } catch (Exception e) {
+        return ResponseEntity.internalServerError().body("Error processing the photo: " + e.getMessage());
     }
+}
 
     public List<GameCharacter> findByGamerId(Long gamerId) {
         return characterRepository.findByGamerId(gamerId);

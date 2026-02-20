@@ -4,20 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.mmo.party_hub.dto.CommentDTO;
-import com.mmo.party_hub.model.entities.Comment;
+import com.mmo.party_hub.dto.PostLikeDTO;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.model.entities.Post;
-import com.mmo.party_hub.model.repositories.CommentRepository;
+import com.mmo.party_hub.model.entities.PostLike;
 import com.mmo.party_hub.model.repositories.GamerRepository;
+import com.mmo.party_hub.model.repositories.PostLikeRepository;
 import com.mmo.party_hub.model.repositories.PostRepository;
 import com.mmo.party_hub.security.JwtUtils;
 
 @Service
-public class CommentService {
+public class PostLikeService {
 
     @Autowired
-    private CommentRepository commentRepo;
+    private PostLikeRepository likeRepo;
 
     @Autowired
     private GamerRepository gamerRepo;
@@ -28,23 +28,21 @@ public class CommentService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public ResponseEntity<?> createComment(CommentDTO dto) {
-        // Pega o ID do gamer logado pelo token
+    public ResponseEntity<?> like(PostLikeDTO dto) {
         long gamerId = Long.parseLong(jwtUtils.getAuthorizedId());
 
         Gamer gamer = gamerRepo.findById(gamerId).orElse(null);
         if (gamer == null) return ResponseEntity.status(404).body("Gamer not found.");
 
         Post post = postRepo.findById((Integer) dto.getPostId()).orElse(null);
-        if (post == null) return ResponseEntity.status(404).body("Post not found.");
+        if (post == null) return ResponseEntity.status(404).body("Not found.");
 
-        Comment comment = new Comment();
-        comment.setContent(dto.getContent());
-        comment.setDate(System.currentTimeMillis());
-        comment.setGamer(gamer);
-        comment.setPost(post);
+        PostLike like = new PostLike();
+        like.setAuthor(gamer);
+        like.setComment(post); // 'comment' é o nome do campo na entidade
+        like.setDate(System.currentTimeMillis());
 
-        commentRepo.save(comment);
-        return ResponseEntity.ok("Comment created successfully.");
+        likeRepo.save(like);
+        return ResponseEntity.ok("Like add!");
     }
 }
