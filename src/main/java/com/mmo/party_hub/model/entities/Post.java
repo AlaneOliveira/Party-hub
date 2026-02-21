@@ -21,19 +21,20 @@ public class Post {
     private long date;
     
     @Lob
-    private String content; // Este será o corpo/descrição do post
-    private String title;   // Novo campo para o título
+    private String content; 
+    private String title;    
 
     @ManyToOne
-    private Gamer author; // No seu é Gamer, no do professor é User
- 
-    // ESTA LINHA É A QUE ESTÁ FALTANDO E CAUSA O ERRO
+    private Gamer author; 
+  
     @ManyToOne
     @JoinColumn(name = "character_id")
     private GameCharacter character;
 
     @OneToMany(mappedBy = "post") // O campo 'post' na classe Comment manda aqui
     private List<Comment> comments;
+
+    private int likesCount = 0; 
 
     // Construtor vazio padrão
     public Post() {} 

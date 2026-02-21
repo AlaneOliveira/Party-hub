@@ -11,9 +11,10 @@ public class PostDTO {
     private String title;
     private String content;
     private long date;
-    private int likes;
+    private int likesCount;
     private String charName;
     private String charPhoto;
+    private boolean alreadyLiked;
     private List<CommentDTO> topComments;
 
     public PostDTO() {}
@@ -23,7 +24,7 @@ public class PostDTO {
         this.title = title;
         this.content = content;
         this.date = date;
-        this.likes = 0; // Inicializa com 0, será atualizado depois
+        this.likesCount = 0;  
         this.charName = charName;
         this.charPhoto = charPhoto; 
         this.topComments = new ArrayList<>(); // Inicializa a lista de comentários

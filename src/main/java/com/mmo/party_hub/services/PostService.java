@@ -2,7 +2,7 @@ package com.mmo.party_hub.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Comparator; // Importante para o sorted
+import java.util.Comparator; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,18 +15,18 @@ import com.mmo.party_hub.model.entities.GameCharacter;
 import com.mmo.party_hub.model.entities.Gamer;
 import com.mmo.party_hub.model.entities.Post;
 import com.mmo.party_hub.model.repositories.GameCharacterRepository;
-import com.mmo.party_hub.model.repositories.GamerRepository;
-import com.mmo.party_hub.model.repositories.PostLikeRepository;
+import com.mmo.party_hub.model.repositories.GamerRepository; 
 import com.mmo.party_hub.model.repositories.PostRepository;
 import com.mmo.party_hub.security.JwtUtils;
+import com.mmo.party_hub.model.repositories.PostLikeRepository; 
 
 @Service
 public class PostService {
     @Autowired private JwtUtils jwtUtils;
     @Autowired private PostRepository postRepository;
     @Autowired private GamerRepository gamerRepo;
-    @Autowired private GameCharacterRepository characterRepository;
-    @Autowired private PostLikeRepository postLikeRepository;
+    @Autowired private GameCharacterRepository characterRepository; 
+    @Autowired private PostLikeRepository postLikeRepository; 
 
     public ResponseEntity<?> save(NewPostDTO dto) {
         try {
@@ -50,9 +50,9 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<?> getGlobalFeed() {
+    public ResponseEntity<?> getGlobalFeed(int characterId) {
         List<Post> posts = this.postRepository.findAllByOrderByDateDesc();
-        
+        GameCharacter viewer = characterRepository.findById((long) characterId).orElse(null);
         List<PostDTO> dtos = posts.stream().map(p -> {
             PostDTO dto = new PostDTO(
                 p.getId(), 
@@ -64,18 +64,22 @@ public class PostService {
             );
             
             // Contagem de likes do post
-            dto.setLikes((int) postLikeRepository.countByCommentId(p.getId()));
+            dto.setLikesCount(p.getLikesCount());
+
+            if (viewer != null) { 
+                boolean liked = postLikeRepository.findByAuthorCharacterAndPost(viewer, p).isPresent();
+                dto.setAlreadyLiked(liked);
+            }
 
             // Lógica de Comentários Populares
             if (p.getComments() != null) {
-                List<CommentDTO> topComments = p.getComments().stream()
-                    .filter(c -> c.getParentComment() == null) // Apenas os principais
-                    .sorted(Comparator.comparingInt(Comment::getLikesCount).reversed())
-                    .limit(2)
-                    .map(this::convertCommentToDTO) // Chama o método auxiliar abaixo
+                List<CommentDTO> allComments = p.getComments().stream()
+                    .filter(c -> c.getParentComment() == null) // Apenas os comentários "pai"
+                    .sorted(Comparator.comparingLong(Comment::getDate)) // Ordem de chegada (antigos primeiro)
+                    .map(this::convertCommentToDTO)
                     .collect(Collectors.toList());
                 
-                dto.setTopComments(topComments);
+                dto.setTopComments(allComments); // O nome do campo pode continuar o mesmo no DTO, mas agora leva todos
             }
 
             return dto;
