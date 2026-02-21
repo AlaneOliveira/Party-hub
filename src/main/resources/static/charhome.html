@@ -4,43 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Character Home - PartyHub</title>
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="css/index.css"/>
 </head>
 <body class="bg-dark text-white"> 
-    <nav class="navbar navbar-dark bg-secondary shadow">
+    <nav class="navbar navbar-dark bg-secondary shadow mb-4">
         <div class="container">
-            <a class="navbar-brand" href="gamerhome.html text-white"><i class="bi bi-arrow-left"></i> Voltar</a>
+            <a class="navbar-brand text-white" href="gamerhome.html"><i class="bi bi-arrow-left"></i> Voltar</a>
             <span id="charNameDisplay" class="navbar-text fw-bold"></span>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <div class="card bg-secondary text-white p-3 mb-4">
-                    <h5>Nova Postagem</h5>
-                    <textarea id="postContent" class="form-control mb-2" placeholder="O que você tem em mente?"></textarea>
+                <div class="card bg-secondary text-white p-3 mb-4 shadow border-0">
+                    <h5 class="mb-3">Nova Postagem</h5>
+                    <div class="mb-2">
+                        <input type="text" id="postTitle" class="form-control mb-2" placeholder="Título do post">
+                        <textarea id="postContent" class="form-control" rows="3" placeholder="O que você tem em mente?"></textarea>
+                    </div>
                     <button onclick="enviarPost()" class="btn btn-primary w-100">Postar</button>
                 </div>
-                <div id="searchSection" class="card bg-secondary text-white p-3">
+
+                <div id="searchSection" class="card bg-secondary text-white p-3 shadow border-0">
                     <h5>Buscar Jogadores</h5>
-                    <button onclick="buscarMesmoJogo()" class="btn btn-outline-warning btn-sm">Ver quem joga comigo</button>
+                    <button onclick="buscarMesmoJogo()" class="btn btn-outline-warning btn-sm w-100 mb-2">Ver quem joga comigo</button>
                     <div id="playersList" class="mt-2"></div>
                 </div>
             </div>
 
             <div class="col-md-8">
-                <h3>Feed de Notícias</h3>
+                <h3 class="mb-4">Feed de Notícias</h3>
                 <div id="feedContainer">
-                    <p class="text-muted">Carregando posts...</p>
+                    <div class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 text-muted">Carregando posts...</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>  
+
     <script src="js/auth.js"></script> 
     <script src="js/charhome.js"></script> 
 </body>

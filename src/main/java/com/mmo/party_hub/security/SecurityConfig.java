@@ -32,11 +32,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/photos/show/**").permitAll() 
                 
                 .requestMatchers("/gamer/**").hasAuthority("GAMER")
-                .requestMatchers("/comment/**").hasAuthority("GAMER")
-                .requestMatchers("/post/**").hasAuthority("GAMER")
-                .requestMatchers("/like/**").hasAuthority("GAMER")
-                .requestMatchers("/public/**").permitAll()
-                
+                .requestMatchers("/like", "/like/**").hasAuthority("GAMER")
+                .requestMatchers("/comment", "/comment/**").hasAuthority("GAMER")
+                .requestMatchers("/post/**").hasAuthority("GAMER") 
+                .requestMatchers("/public/**").permitAll()   
                 .anyRequest().authenticated()
             )
            

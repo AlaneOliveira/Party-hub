@@ -1,17 +1,17 @@
 package com.mmo.party_hub.dto;
+import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
 public class CommentDTO {
-    
+    private Integer id;
     private String content;
-    private int postId;
-
-     public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
-    public int getPostId() { return postId; }
-    public void setPostId(int postId) { this.postId = postId; }
+    private Integer postId;
+    private Long characterId;
+    private String charName;
+    private String charPhoto;
+    private long date;
+    private int likesCount;
+    private List<CommentDTO> replies; // Para os subcomentários
 }

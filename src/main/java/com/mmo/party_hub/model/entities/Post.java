@@ -7,84 +7,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.*;
+import java.util.List; 
 
+@Getter @Setter
 @Entity
 public class Post {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Mude para IDENTITY se estiver usando MySQL
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
     private long date;
     
     @Lob
-    private String content;
+    private String content; // Este será o corpo/descrição do post
+    private String title;   // Novo campo para o título
 
     @ManyToOne
     private Gamer author; // No seu é Gamer, no do professor é User
-
-    @ManyToOne
-    private Post post; // Se for resposta de post, ou aponte para a Entidade principal (ex: Post/Question)
-    private String description; // Adicionado para bater com seu PostDTO
-    private String category;    // Adicionado para bater com seu PostDTO
-
+ 
     // ESTA LINHA É A QUE ESTÁ FALTANDO E CAUSA O ERRO
     @ManyToOne
     @JoinColumn(name = "character_id")
     private GameCharacter character;
 
+    @OneToMany(mappedBy = "post") // O campo 'post' na classe Comment manda aqui
+    private List<Comment> comments;
+
     // Construtor vazio padrão
-    public Post() {}
-
-    // Getters e Setters do Character (Obrigatórios para o Hibernate)
-    public GameCharacter getCharacter() {
-        return character;
-    }
-    public void setCharacter(GameCharacter character) {
-        this.character = character;
-    }
-
-    // Getters e Setters
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public long getDate() {
-        return date;
-    }
-    public void setDate(long date) {
-        this.date = date;
-    }
-    public String getContent() {
-        return content;
-    }
-    public void setContent(String content) {
-        this.content = content;
-    }
-    public Gamer getAuthor() {
-        return author;
-    }
-    public void setAuthor(Gamer author) {
-        this.author = author;
-    }
-    public Post getPost() {
-        return post;
-    }
-    public void setPost(Post post) {
-        this.post = post;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public String getCategory() {
-        return category;
-    }
-    public void setCategory(String category) {
-        this.category = category;
-    }
-}
+    public Post() {} 
+} 

@@ -17,7 +17,7 @@ function logout() {
     sessionStorage.clear();
     window.location.href = 'index.html';
 }
-
+ 
 document.getElementById('charForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -31,6 +31,7 @@ document.getElementById('charForm').addEventListener('submit', async (e) => {
     const token = sessionStorage.getItem('token');
  
     try { 
+        // 1. Cria o personagem (Retorna o GameCharacterDTO com o ID)
         const response = await fetch(`${BASE_URL}/gamer/character`, {
             method: 'POST',
             headers: { 
@@ -41,23 +42,33 @@ document.getElementById('charForm').addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            const savedChar = await response.json(); // Pega o personagem criado
+            const savedChar = await response.json(); // Pegamos o personagem salvo
             const fileInput = document.getElementById('photoFile');
 
+            // 2. Se houver arquivo, faz o upload usando a NOVA ROTA e MÉTODO PATCH
             if (fileInput.files.length > 0) {
                 const formData = new FormData();
                 formData.append('file', fileInput.files[0]);
 
-                await fetch(`${BASE_URL}/gamer/character/photo/${savedChar.id}`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: formData
-                });
+                try {
+                    const photoResponse = await fetch(`${BASE_URL}/gamer/character/${savedChar.id}/photo`, {
+                        method: 'PATCH', // Alterado para PATCH conforme o GamerController
+                        headers: { 
+                            'Authorization': `Bearer ${token}`  
+                        },
+                        body: formData
+                    });
+
+                    if (!photoResponse.ok) {
+                        console.error("Erro no servidor ao salvar foto");
+                    }
+                } catch (photoErr) {
+                    console.error("Erro na requisição da foto:", photoErr);     
+                }
             }
 
-            alert('Personagem e foto salvos!');
+            alert('Personagem criado com sucesso!');
             location.reload(); 
-        
         } else {
             const erro = await response.text();
             alert('Erro ao criar personagem: ' + erro);

@@ -6,7 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.*;
 
+@Getter @Setter
 @Entity
 @Table(name = "post_like")
 public class PostLike {
@@ -19,31 +21,6 @@ public class PostLike {
     @ManyToOne
     private Gamer author;
     @ManyToOne
-    private Post comment;
-
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public long getDate() {
-        return date;
-    }
-    public void setDate(long date) {
-        this.date = date;
-    }
-    public Gamer getAuthor() {
-        return author;
-    }
-    public void setAuthor(Gamer author) {
-        this.author = author;
-    }
-    public Post getComment() {
-        return comment;
-    }
-    public void setComment(Post comment) {
-        this.comment = comment;
-    }
+    private Post comment; 
 
 }

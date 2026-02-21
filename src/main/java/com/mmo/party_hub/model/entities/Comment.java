@@ -1,17 +1,23 @@
 package com.mmo.party_hub.model.entities;
-
+ 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.List;
+import lombok.*;
+import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Getter @Setter
 @Entity
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private long date;
     
@@ -19,24 +25,24 @@ public class Comment {
     private String content;
 
     @ManyToOne
-    private Gamer gamer;
+    private Gamer gamer; // O dono da conta
     
     @ManyToOne
+    private GameCharacter character; // O personagem que comentou
+
+    @ManyToOne
+    @JsonIgnore
     private Post post;
 
-    // Getters e Setters limpos
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    
-    public long getDate() { return date; }
-    public void setDate(long date) { this.date = date; }
-    
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    // Lógica de Subcomentários
+    @ManyToOne
+    @JsonIgnore
+    private Comment parentComment;
 
-    public Gamer getGamer() { return gamer; }
-    public void setGamer(Gamer gamer) { this.gamer = gamer; }
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    private List<Comment> replies;
+
+    // Lógica de Likes em comentários (TODO: criar tabela CommentLike se quiser toggle)
+    private int likesCount = 0;
     
-    public Post getPost() { return post; }
-    public void setPost(Post post) { this.post = post; }
 }

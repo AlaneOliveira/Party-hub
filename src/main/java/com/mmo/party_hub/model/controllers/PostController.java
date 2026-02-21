@@ -23,8 +23,9 @@ public class PostController {
         return postS.save(post);
     }
 
+    // Alterado para retornar o Feed Global (todos os posts de todos os personagens)
     @GetMapping
     public ResponseEntity<?> getPosts() {
-        return this.postS.getAuthorizedPosts();
+        return this.postS.getGlobalFeed();
     }
 }
