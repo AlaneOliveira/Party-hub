@@ -60,7 +60,8 @@ public class PostService {
                 p.getContent(), 
                 p.getDate(), 
                 p.getCharacter().getName(), 
-                p.getCharacter().getImageUrl()
+                p.getCharacter().getImageUrl(),
+                p.getCharacter().getId().intValue()
             );
             
             // Contagem de likes do post
@@ -85,6 +86,20 @@ public class PostService {
             return dto;
         }).collect(Collectors.toList());
 
+        return ResponseEntity.ok(dtos);
+    }
+
+    public ResponseEntity<?> getCharacterPosts(Integer characterId) {
+        List<Post> posts = this.postRepository.findByCharacterIdOrderByDateDesc(characterId);
+        List<PostDTO> dtos = posts.stream().map(p -> new PostDTO(
+            p.getId(), 
+            p.getTitle(), 
+            p.getContent(), 
+            p.getDate(), 
+            p.getCharacter().getName(), 
+            p.getCharacter().getImageUrl(),
+            p.getCharacter().getId().intValue()
+        )).collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 

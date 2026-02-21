@@ -225,8 +225,10 @@ function renderFeed(posts) {
         <div class="card bg-secondary text-white mb-3 shadow-sm border-0">
             <div class="card-header d-flex align-items-center bg-transparent border-0">
                 <img src="${post.charPhoto || 'images/default-avatar.jpg'}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
-                <div>
-                    <h6 class="mb-0">${post.charName}</h6>
+                <div> 
+                    <h6 class="mb-0" style="cursor: pointer" onclick="window.location.href='profilepage.html?id=${post.characterId}'">
+                        ${post.charName}
+                    </h6>
                     <small class="text-light opacity-75">${new Date(post.date).toLocaleString()}</small>
                 </div>
             </div>

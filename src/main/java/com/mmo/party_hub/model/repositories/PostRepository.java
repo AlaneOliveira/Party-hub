@@ -8,4 +8,5 @@ import com.mmo.party_hub.model.entities.Post;
 public interface PostRepository extends JpaRepository<Post, Integer> {
     Optional<List<Post>> findByAuthorId(Long authorId);
     List<Post> findAllByOrderByDateDesc();
+    List<Post> findByCharacterIdOrderByDateDesc(Integer characterId);
 } 

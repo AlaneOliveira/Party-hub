@@ -21,6 +21,7 @@ import com.mmo.party_hub.services.GameCharacterService;
 import com.mmo.party_hub.services.GamerService;
 import com.mmo.party_hub.security.JwtUtils;
 import java.util.List;
+import java.util.Map; 
 
 @RestController
 @RequestMapping("/gamer")
@@ -72,10 +73,20 @@ public class GamerController {
     }
 
     @PatchMapping("/character/{id}/photo") // nova rota para upload de foto do personagem, usando o ID do personagem na URL
-    public ResponseEntity<?> uploadCharacterPhoto(
-    @PathVariable Long id,
-    @RequestParam("file") MultipartFile file) {
-    return characterService.uploadPhoto(id, file);
-}
+    public ResponseEntity<?> uploadCharacterPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        return characterService.uploadPhoto(id, file);
+    }
+
+    @PostMapping("/character/follow")
+    public ResponseEntity<?> follow(@RequestBody Map<String, Long> payload) {
+        return characterService.toggleFollow(payload.get("followerId"), payload.get("followingId"));
+    }
+
+    @GetMapping("/character/{id}")
+    public ResponseEntity<?> getCharacterProfile(@PathVariable Long id) {
+        GameCharacter character = characterService.findById(id);
+        GameCharacterDTO dto = new GameCharacterDTO(character);
+        return ResponseEntity.ok(dto);
+    }
 
 }

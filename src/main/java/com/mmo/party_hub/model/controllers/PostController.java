@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.mmo.party_hub.dto.NewPostDTO;
+import org.springframework.web.bind.annotation.PathVariable; 
 import com.mmo.party_hub.services.PostService;
+import com.mmo.party_hub.dto.NewPostDTO; 
 
 @RestController
 @RequestMapping("/post")
@@ -18,7 +18,7 @@ public class PostController {
 
     @Autowired
     private PostService postS;
-
+ 
     @PostMapping
     public ResponseEntity<?> post(@RequestBody NewPostDTO post) {
         return postS.save(post);
@@ -28,5 +28,10 @@ public class PostController {
     @GetMapping
     public ResponseEntity<?> getPosts(@RequestParam int characterId) { // Recebe o ID via URL
         return this.postS.getGlobalFeed(characterId);
+    }
+
+    @GetMapping("/character/{id}")
+    public ResponseEntity<?> getCharacterPosts(@PathVariable Integer id) {
+        return this.postS.getCharacterPosts(id);
     }
 }
