@@ -13,7 +13,7 @@
     <nav class="navbar navbar-dark bg-secondary shadow mb-4">
         <div class="container">
             <a class="navbar-brand text-white" href="charhome.html"><i class="bi bi-arrow-left"></i> Voltar</a>
-            <span class="navbar-text fw-bold">Perfil do Personagem</span>
+            <span class="navbar-text fw-bold" id="navtitle">Perfil do Personagem</span>
         </div>
     </nav>
     <div class="container">
@@ -24,10 +24,11 @@
                         <img id="profileImage" src="images/default-avatar.jpg" 
                             class="rounded-circle border border-4 border-primary" 
                             style="width: 150px; height: 150px; object-fit: cover;">
-                        <button id="editPhotoBtn" class="btn btn-sm btn-light position-absolute bottom-0 end-0 rounded-circle d-none" onclick="document.getElementById('fileInput').click()">
+                        
+                        <button id="editPhotoBtn" class="btn btn-sm btn-light position-absolute bottom-0 end-0 rounded-circle d-none" 
+                                onclick="trocarFotoUrl()">
                             <i class="bi bi-camera"></i>
                         </button>
-                        <input type="file" id="fileInput" class="d-none" onchange="uploadPhoto(this.files[0])">
                     </div>
                 </div>
                 
@@ -37,10 +38,13 @@
                         <p id="profileGame" class="text-warning mb-3">---</p>
                         
                         <div class="d-flex justify-content-center justify-content-md-start gap-3">
-                            <button id="followBtn" onclick="toggleFollow()" class="btn btn-primary px-4 d-none">Seguir</button>
-                            
-                            <button id="manageBtn" class="btn btn-outline-light px-4 d-none" data-bs-toggle="modal" data-bs-target="#followingModal">
-                                <i class="bi bi-people"></i> Seguindo
+                            <button id="followBtn" onclick="toggleFollow()" class="btn btn-primary px-4 d-none"></button>
+
+                            <button id="showFollowingBtn" class="btn btn-outline-light px-3" data-bs-toggle="modal" data-bs-target="#followingModal">
+                                <strong id="followingCount">0</strong> Seguindo
+                            </button>
+                            <button id="showFollowersBtn" class="btn btn-outline-light px-3" data-bs-toggle="modal" data-bs-target="#followersModal">
+                                <strong id="followersCount">0</strong> Seguidores
                             </button>
                         </div>
                     </div>
@@ -64,7 +68,19 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="followersModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-secondary text-white">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Seguidores</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="followersList"></div>
+            </div>
+        </div>
+    </div>
     <script src="js/auth.js"></script> 
+    <script src="js/feed-logic.js"></script>
     <script src="js/profilepage.js"></script> 
 </body>
 </html>

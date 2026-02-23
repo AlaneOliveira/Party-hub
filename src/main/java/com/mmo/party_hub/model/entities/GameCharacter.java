@@ -32,10 +32,6 @@ public class GameCharacter {
     @Column(nullable = false, length = 100)
     private String name;
 
-    private String clazz; // 'class' é reservado no Java
-
-    private Integer level = 1;
-
     private String imageUrl;
 
     @Column(nullable = false)
@@ -46,6 +42,13 @@ public class GameCharacter {
     @JsonIgnore // Evita referência circular na serialização JSON
     private Gamer gamer;
 
-    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follower> following;
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follower> followers;
+
 }

@@ -39,10 +39,12 @@ public class Comment {
     @JsonIgnore
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    private List<Comment> replies;
-
-    // Lógica de Likes em comentários (TODO: criar tabela CommentLike se quiser toggle)
     private int likesCount = 0;
     
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> replies;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> likes;
+
 }

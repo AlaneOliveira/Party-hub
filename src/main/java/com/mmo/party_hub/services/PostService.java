@@ -2,7 +2,6 @@ package com.mmo.party_hub.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Comparator; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,36 +50,61 @@ public class PostService {
     }
 
     public ResponseEntity<?> getGlobalFeed(int characterId) {
-        List<Post> posts = this.postRepository.findAllByOrderByDateDesc();
-        GameCharacter viewer = characterRepository.findById((long) characterId).orElse(null);
+        GameCharacter viewer = characterRepository.findById((long) characterId)
+            .orElseThrow(() -> new RuntimeException("Personagem não encontrado"));
+
+        // Busca posts: Mesmo Universo + Personagens que o viewer segue
+        List<Post> posts = postRepository.findPostsByUniverseAndFollowing(viewer.getGameTitle(), (long) characterId);
+
         List<PostDTO> dtos = posts.stream().map(p -> {
             PostDTO dto = new PostDTO(
-                p.getId(), 
-                p.getTitle(), 
-                p.getContent(), 
-                p.getDate(), 
-                p.getCharacter().getName(), 
-                p.getCharacter().getImageUrl(),
+                p.getId(), p.getTitle(), p.getContent(), p.getDate(), 
+                p.getCharacter().getName(), p.getCharacter().getImageUrl(),
+                p.getCharacter().getId().intValue()
+            );
+            dto.setLikesCount(p.getLikesCount());
+            dto.setAlreadyLiked(postLikeRepository.findByAuthorCharacterAndPost(viewer, p).isPresent());
+            
+            // Mapeamento de comentários
+            if (p.getComments() != null) {
+                dto.setTopComments(p.getComments().stream()
+                    .filter(c -> c.getParentComment() == null)
+                    .map(this::convertCommentToDTO)
+                    .collect(Collectors.toList()));
+            }
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    public ResponseEntity<?> getCharacterPosts(Integer characterId, Integer viewerId) {
+        // 1. Busca os posts do personagem do perfil
+        List<Post> posts = this.postRepository.findByCharacterIdOrderByDateDesc(characterId);
+        GameCharacter viewer = characterRepository.findById((long) viewerId).orElse(null);
+
+        List<PostDTO> dtos = posts.stream().map(p -> {
+            // Usa o construtor completo que criamos
+            PostDTO dto = new PostDTO(
+                p.getId(), p.getTitle(), p.getContent(), p.getDate(), 
+                p.getCharacter().getName(), p.getCharacter().getImageUrl(),
                 p.getCharacter().getId().intValue()
             );
             
-            // Contagem de likes do post
             dto.setLikesCount(p.getLikesCount());
 
-            if (viewer != null) { 
-                boolean liked = postLikeRepository.findByAuthorCharacterAndPost(viewer, p).isPresent();
-                dto.setAlreadyLiked(liked);
+            // VERIFICAÇÃO DE LIKE (Crucial para o coração aparecer vermelho)
+            if (viewer != null) {
+                dto.setAlreadyLiked(postLikeRepository.findByAuthorCharacterAndPost(viewer, p).isPresent());
             }
 
-            // Lógica de Comentários Populares
+            // COMENTÁRIOS (Crucial para o número de comentários aparecer)
             if (p.getComments() != null) {
                 List<CommentDTO> allComments = p.getComments().stream()
-                    .filter(c -> c.getParentComment() == null) // Apenas os comentários "pai"
-                    .sorted(Comparator.comparingLong(Comment::getDate)) // Ordem de chegada (antigos primeiro)
-                    .map(this::convertCommentToDTO)
+                    .filter(c -> c.getParentComment() == null)
+                    .map(this::convertCommentToDTO) // Usa o método que já temos no Service
                     .collect(Collectors.toList());
-                
-                dto.setTopComments(allComments); // O nome do campo pode continuar o mesmo no DTO, mas agora leva todos
+                dto.setTopComments(allComments);
             }
 
             return dto;
@@ -89,24 +113,11 @@ public class PostService {
         return ResponseEntity.ok(dtos);
     }
 
-    public ResponseEntity<?> getCharacterPosts(Integer characterId) {
-        List<Post> posts = this.postRepository.findByCharacterIdOrderByDateDesc(characterId);
-        List<PostDTO> dtos = posts.stream().map(p -> new PostDTO(
-            p.getId(), 
-            p.getTitle(), 
-            p.getContent(), 
-            p.getDate(), 
-            p.getCharacter().getName(), 
-            p.getCharacter().getImageUrl(),
-            p.getCharacter().getId().intValue()
-        )).collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
-
     // MÉTODO AUXILIAR para evitar recursão infinita e erro de Nesting Depth
     private CommentDTO convertCommentToDTO(Comment c) {
         CommentDTO cdto = new CommentDTO();
         cdto.setId(c.getId());
+        cdto.setCharId(c.getCharacter().getId().intValue());
         cdto.setContent(c.getContent());
         cdto.setCharName(c.getCharacter().getName());
         cdto.setCharPhoto(c.getCharacter().getImageUrl());
@@ -120,5 +131,28 @@ public class PostService {
                 .collect(Collectors.toList()));
         }
         return cdto;
+    }
+
+    public ResponseEntity<?> getSameGameFeed(int characterId) {
+        GameCharacter viewer = characterRepository.findById((long) characterId)
+            .orElseThrow(() -> new RuntimeException("Personagem não encontrado"));
+        
+        // Busca posts do mesmo jogo do viewer
+        List<Post> posts = postRepository.findByCharacterGameTitleOrderByDateDesc(viewer.getGameTitle());
+        
+        // Converte para DTO usando a mesma lógica que você já tem no getGlobalFeed
+        List<PostDTO> dtos = posts.stream().map(p -> {
+            PostDTO dto = new PostDTO(
+                p.getId(), p.getTitle(), p.getContent(), p.getDate(), 
+                p.getCharacter().getName(), p.getCharacter().getImageUrl(),
+                p.getCharacter().getId().intValue()
+            );
+            dto.setLikesCount(p.getLikesCount());
+            dto.setAlreadyLiked(postLikeRepository.findByAuthorCharacterAndPost(viewer, p).isPresent());
+            // ... preencher comentários se necessário
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
     }
 }

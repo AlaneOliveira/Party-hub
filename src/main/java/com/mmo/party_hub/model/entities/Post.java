@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import lombok.*;
 import java.util.List; 
 
@@ -31,10 +32,13 @@ public class Post {
     @JoinColumn(name = "character_id")
     private GameCharacter character;
 
-    @OneToMany(mappedBy = "post") // O campo 'post' na classe Comment manda aqui
+    private int likesCount = 0; 
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    private int likesCount = 0; 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> likes;
 
     // Construtor vazio padrão
     public Post() {} 

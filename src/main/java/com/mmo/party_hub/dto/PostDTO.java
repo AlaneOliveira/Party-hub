@@ -22,6 +22,7 @@ public class PostDTO {
 
     public PostDTO(int id, String title, String content, long date, String charName, String charPhoto, int characterId) {
         this.id = id;
+
         this.title = title;
         this.content = content;
         this.date = date;

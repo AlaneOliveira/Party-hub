@@ -6,6 +6,7 @@ import lombok.*;
 @Getter @Setter
 public class CommentDTO {
     private Integer id;
+    private int charId;
     private String content;
     private Integer postId;
     private Long characterId;

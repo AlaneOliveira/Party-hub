@@ -1,19 +1,12 @@
 package com.mmo.party_hub.services;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.mmo.party_hub.dto.NewPasswordDTO;
 import com.mmo.party_hub.model.entities.Gamer;
-import com.mmo.party_hub.model.entities.Photo;
 import com.mmo.party_hub.model.repositories.GamerRepository;
-import com.mmo.party_hub.model.repositories.PhotoRepository;
 import com.mmo.party_hub.security.JwtUtils;
 
 @Component
@@ -25,18 +18,16 @@ public class GamerService {
     private GamerRepository gamerRepo;
     @Autowired
     private PasswordEncoder encoder;
-    @Autowired
-    private PhotoRepository photoRepository;
 
     public ResponseEntity<?> getGamer() {
-        // 1. Pegamos o ID (que vem do Subject do Token)
-        Long id = Long.valueOf(jwtUtils.getAuthorizedId()); 
+    // Busca o ID do usuário logado via Token
+        Long gamerId = Long.valueOf(jwtUtils.getAuthorizedId());
+        Gamer gamer = gamerRepo.findById(gamerId).orElse(null);
         
-        // 2. Buscamos pelo ID numérico
-        Gamer u = gamerRepo.findById(id)
-                             .orElseThrow(() -> new RuntimeException("Gamer not found"));
-        u.setPassword(null); 
-        return ResponseEntity.ok(u);
+        if (gamer == null) return ResponseEntity.status(404).body("Usuário não encontrado");
+        
+        // Retorne o objeto Gamer (o Jackson transformará em JSON com o campo 'name')
+        return ResponseEntity.ok(gamer);
     }
 
     public ResponseEntity<?> updatePassword(NewPasswordDTO passDto) {
@@ -50,38 +41,5 @@ public class GamerService {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("Incorrect old password.");
-    }
-
-    public ResponseEntity<?> uploadPhoto(MultipartFile file) {
-        try {
-            Long id = Long.valueOf(jwtUtils.getAuthorizedId());
-            Gamer gamer = this.gamerRepo.findById(id)
-                                 .orElseThrow(() -> new RuntimeException("Gamer not found"));
-
-            Photo p = new Photo();
-            p.setContent(file.getBytes());
-            p.setExtension(file.getContentType().split("/")[1]);
-            p.setLength((int) file.getSize());
-            p.setGamer(gamer);
-
-            photoRepository.save(p);
-            return ResponseEntity.ok().build();
-            
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Error processing the photo.: " + e.getMessage());
-        }
-    }
-
-    public ResponseEntity<?> getPerfil() {
-        Long id = Long.valueOf(this.jwtUtils.getAuthorizedId());
-        Optional<Photo> photoOpt = this.photoRepository.findByGId(id);
-
-        if (photoOpt.isPresent()) {
-            Photo p = photoOpt.get();
-            p.setGamer(null);
-            return ResponseEntity.ok(p);
-        }
-
-        return ResponseEntity.notFound().build();
     }
 }

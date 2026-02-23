@@ -58,7 +58,6 @@ if (loginForm) {
                 const token = await response.text();
                 sessionStorage.setItem('token', token); 
                 
-                // Busca os dados do perfil antes de redirecionar
                 await fetchGamerData(token);
                 
                 window.location.href = 'gamerhome.html';
@@ -76,7 +75,8 @@ if (loginForm) {
 // Função para buscar dados do perfil
 async function fetchGamerData(token) {
     try {
-        const response = await fetch(`${BASE_URL}/gamer`, { 
+        // Agora acessando a rota /gamer/profile que acabamos de ajustar no Java
+        const response = await fetch(`${BASE_URL}/gamer/profile`, { 
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {

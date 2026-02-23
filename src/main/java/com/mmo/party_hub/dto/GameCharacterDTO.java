@@ -14,19 +14,16 @@ public class GameCharacterDTO {
 
     private Long id;
     private String name;
-    private String clazz;
     private String gameTitle;
-    private Integer level;
     private String imageUrl;
     private boolean hasPhoto;
-
+    private boolean isFollowing;
+ 
     public GameCharacterDTO(GameCharacter character) {
         this.id = character.getId();
         this.name = character.getName();
-        this.clazz = character.getClazz();
         this.gameTitle = character.getGameTitle();
-        this.level = character.getLevel();
         this.imageUrl = character.getImageUrl();
-        this.hasPhoto = character.getImageUrl() != null && !character.getImageUrl().isEmpty();
-    }
+        this.hasPhoto = character.getImageUrl() != null && !character.getImageUrl().isEmpty();  
+    } 
 }

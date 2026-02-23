@@ -11,9 +11,22 @@
 </head>
 <body class="bg-dark text-white"> 
     <nav class="navbar navbar-dark bg-secondary shadow mb-4">
-        <div class="container">
-            <a class="navbar-brand text-white" href="gamerhome.html"><i class="bi bi-arrow-left"></i> Voltar</a>
-            <span id="charNameDisplay" class="navbar-text fw-bold"></span>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-white d-flex align-items-center" href="gamerhome.html">
+                <i class="bi bi-arrow-left me-2"></i> 
+                <span class="d-none d-md-inline">Sair do Universo</span>
+            </a>
+            
+            <div class="text-center">
+                <span class="text-warning small d-block" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">Universo</span>
+                <span id="universeDisplay" class="fw-bold text-white">Carregando...</span>
+            </div>
+
+            <a id="navProfileLink" href="#" class="d-flex align-items-center text-decoration-none">
+                <img id="navProfileImg" src="images/default-avatar.jpg" 
+                    class="rounded-circle border border-2 border-primary" 
+                    style="width: 40px; height: 40px; object-fit: cover;">
+            </a>
         </div>
     </nav>
 
@@ -30,14 +43,26 @@
                 </div>
 
                 <div id="searchSection" class="card bg-secondary text-white p-3 shadow border-0">
-                    <h5>Buscar Jogadores</h5>
-                    <button onclick="buscarMesmoJogo()" class="btn btn-outline-warning btn-sm w-100 mb-2">Ver quem joga comigo</button>
-                    <div id="playersList" class="mt-2"></div>
+                    <h5 class="mb-3">Buscar Jogadores</h5>
+                    <div class="input-group mb-3 shadow-sm">
+                        <span class="input-group-text bg-white border-0">
+                            <i class="bi bi-search text-dark"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control border-0" placeholder="Nome do personagem...">
+                        <button onclick="buscarJogadores()" class="btn btn-primary fw-bold px-3">Enviar</button>
+                    </div>
+                    <div id="suggestionsSection" class="card bg-secondary text-white p-3 mt-4 shadow border-0">
+                        <h6 class="text-warning mb-3"><i class="bi bi-person-plus-fill"></i> Sugestões para você</h6>
+                        <div id="suggestionsList">
+                            </div>
+                    </div>
+                
+                    <div id="playersList" class="mt-2 scrollable-list" style="max-height: 300px; overflow-y: auto;"></div>
                 </div>
             </div>
 
             <div class="col-md-8">
-                <h3 class="mb-4">Feed de Notícias</h3>
+                <h3 class="mb-4">Meu Feed</h3>
                 <div id="feedContainer">
                     <div class="text-center p-5">
                         <div class="spinner-border text-primary" role="status"></div>
@@ -49,6 +74,7 @@
     </div>  
 
     <script src="js/auth.js"></script> 
+    <script src="js/feed-logic.js"></script>
     <script src="js/charhome.js"></script> 
 </body>
 </html>

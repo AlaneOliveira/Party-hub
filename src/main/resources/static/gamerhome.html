@@ -16,7 +16,7 @@
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">PartyHub</a>
             <div class="d-flex align-items-center">
-                <span class="me-3" id="welcomeText">Carregando...</span>
+                <span class="me-3" id="welcomeText">---</span>
                 <button onclick="logout()" class="btn btn-outline-danger btn-sm">Sair</button>
             </div>
         </div>
@@ -46,15 +46,14 @@
             </div>
             <div class="modal-body">
                 <form id="charForm">
-                <div class="mb-3">
-                    <label class="form-label">Nome do Personagem</label>
-                    <input type="text" class="form-control" id="name" required>
-                </div>
-                <div class="mb-3"> 
                     <div class="mb-3">
-                        <label class="form-label">Escolha o Jogo</label>
+                        <label class="form-label">Nome do Personagem</label>
+                        <input type="text" class="form-control" id="name" placeholder="Ex: Arthas" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Escolha o Universo (Jogo)</label>
                         <select class="form-select" id="gameTitle" required>
-                            <option value="" selected disabled>Selecione um MMO...</option>
+                            <option value="" selected disabled>Selecione um jogo...</option>
                             <option value="Overwatch 2">Overwatch 2</option>
                             <option value="League of Legends">League of Legends</option>
                             <option value="Counter-Strike 2">Counter-Strike 2</option>
@@ -62,21 +61,24 @@
                             <option value="Valorant">Valorant</option>
                             <option value="Diablo IV">Diablo IV</option>
                             <option value="World of Warcraft">World of Warcraft</option>
-                            <option value="Lost Ark">Lost Ark</option>
-                            <option value="Destiny 2">Destiny 2</option>
                             <option value="Fortnite">Fortnite</option>
-                            </select>
+                        </select>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Classe (opcional)</label>
-                    <input type="text" class="form-control" id="clazz" placeholder="Ex: Guerreiro, Mago">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Foto do Personagem (Opcional)</label>
-                    <input type="file" class="form-control" id="photoFile" accept="image/*">
-                </div>
-                <button type="submit" class="btn btn-success w-100">Salvar Personagem</button>
+                    <div class="mb-3">
+                        <label class="form-label">URL da Imagem de Perfil</label>
+                        <input type="url" class="form-control" id="imageUrl" 
+                            placeholder="https://exemplo.com/foto.jpg" 
+                            oninput="previewImage(this.value)">
+                        <div class="form-text text-light opacity-50">Cole o link de uma imagem da internet.</div>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <p class="small text-muted mb-2">Pré-visualização:</p>
+                        <img id="imagePreview" src="images/default-avatar.jpg" 
+                            class="rounded-circle border border-3 border-primary" 
+                            style="width: 100px; height: 100px; object-fit: cover;">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 fw-bold">Criar Personagem</button>
                 </form>
             </div>
             </div>
