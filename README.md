@@ -6,6 +6,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17%2B-orange"/>
+  <img src="https://img.shields.io/badge/Front--End-HTML%2C%20CSS%2C%20JS%20%26%20Bootstrap-blue"/>
   <img src="https://img.shields.io/badge/Spring%20Boot-Backend-green"/>
   <img src="https://img.shields.io/badge/Status-Finalizado-brightgreen"/>
 </p>
