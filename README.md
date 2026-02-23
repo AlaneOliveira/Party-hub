@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Frontend-Livre-blue"/>
   <img src="https://img.shields.io/badge/Spring%20Boot-Backend-green"/>
   <img src="https://img.shields.io/badge/WebSocket-Realtime-purple"/>
-  <img src="https://img.shields.io/badge/Status-Em%Finalizado-green"/>
+  <img src="https://img.shields.io/badge/Status-Finalizado-brightgreen"/>
 </p>
 
 ---
